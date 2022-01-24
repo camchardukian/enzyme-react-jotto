@@ -1,12 +1,18 @@
+import { useEffect } from "react";
 import "./App.css";
 import Congrats from "./Congrats";
 import GuessedWords from "./GuessedWords";
 import Input from "./Input";
+import { getSecretWord } from "./actions";
 function App() {
   // @TODO -- Get props from state after implementing Context
   const success = false;
   const secretWord = "party";
   const guessedWords = [];
+
+  useEffect(() => {
+    getSecretWord();
+  }, []);
   return (
     <div data-test="component-app" className="container">
       <h1>Jotto</h1>
