@@ -8,7 +8,7 @@ describe("getSecretWord", () => {
   afterEach(() => {
     moxios.install();
   });
-  test("secretWord is returned", () => {
+  test("secretWord is returned", async () => {
     moxios.wait(() => {
       const request = moxios.requests.mostRecent();
       request.respondWith({
@@ -16,9 +16,9 @@ describe("getSecretWord", () => {
         response: "party",
       });
     });
-    // update test once we've added Context to the app.
-    return getSecretWord().then((secretWord) => {
-      expect(secretWord).toBe("party");
-    });
+
+    const mockSetSecretWord = jest.fn();
+    await getSecretWord(mockSetSecretWord);
+    expect(mockSetSecretWord).toHaveBeenCalledWith("party");
   });
 });
