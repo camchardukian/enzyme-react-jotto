@@ -26,6 +26,17 @@ function App() {
   useEffect(() => {
     getSecretWord(setSecretWord);
   }, []);
+
+  if (state.secretWord === null) {
+    return (
+      <div className="container" data-test="spinner">
+        <div className="spinner-border" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+        <p>Please wait, we're getting a secret word for you...</p>
+      </div>
+    );
+  }
   return (
     <div data-test="component-app" className="container">
       <h1>Jotto</h1>
