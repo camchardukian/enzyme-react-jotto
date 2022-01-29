@@ -1,17 +1,22 @@
-import { shallow } from "enzyme";
 import React from "react";
+import { mount } from "enzyme";
 import { findByTestAttr, checkProps } from "../test/testUtils";
 import Input from "./Input";
+import languageContext from "./contexts/languageContext";
 
-const setup = (success = false, secretWord = "hello") => {
-  return shallow(<Input success={success} secretWord={secretWord} />);
+const setup = ({ language = "en", success = false, secretWord = "hello" }) => {
+  return mount(
+    <languageContext.Provider value={language}>
+      <Input success={success} secretWord={secretWord} />
+    </languageContext.Provider>
+  );
 };
 
 describe("render", () => {
   describe("success is true", () => {
     let wrapper;
     beforeEach(() => {
-      wrapper = setup(true);
+      wrapper = setup({ success: true });
     });
     test("input renders without error", () => {
       const wrapper = setup({ secretWord: "train" });
@@ -30,7 +35,7 @@ describe("render", () => {
   describe("success is false", () => {
     let wrapper;
     beforeEach(() => {
-      wrapper = setup(false);
+      wrapper = setup({ success: false });
     });
     test("input renders without error", () => {
       const wrapper = setup({ secretWord: "train" });
@@ -61,7 +66,7 @@ describe("state controlled input field", () => {
     mockSetCurrentGuess.mockClear();
     originalUseState = React.useState;
     React.useState = () => ["", mockSetCurrentGuess];
-    wrapper = setup();
+    wrapper = setup({});
   });
 
   afterEach(() => {
@@ -69,23 +74,31 @@ describe("state controlled input field", () => {
   });
 
   test("state updated with value of input box upon change", () => {
-    React.useState = jest.fn(() => ["", mockSetCurrentGuess]);
-
-    const wrapper = setup();
     const inputBox = findByTestAttr(wrapper, "input-box");
-
     const mockEvent = { target: { value: "train" } };
-    inputBox.simulate("change", mockEvent);
 
+    inputBox.simulate("change", mockEvent);
     expect(mockSetCurrentGuess).toHaveBeenCalledWith("train");
   });
-  test("currentGuess is updated to be empty string after submitting", () => {
-    React.useState = jest.fn(() => ["", mockSetCurrentGuess]);
-    const wrapper = setup();
 
+  test("currentGuess is updated to be empty string after submitting", () => {
     const submitBtn = findByTestAttr(wrapper, "submit-button");
     submitBtn.simulate("click", { preventDefault() {} });
 
     expect(mockSetCurrentGuess).toHaveBeenCalledWith("");
+  });
+});
+
+describe("languagePicker", () => {
+  test("correctly renders submit string in English", () => {
+    const wrapper = setup({ language: "en" });
+    const submitButton = findByTestAttr(wrapper, "submit-button");
+    expect(submitButton.text()).toBe("Submit");
+  });
+
+  test("correctly renders submit string in Emoji language", () => {
+    const wrapper = setup({ language: "emoji" });
+    const submitButton = findByTestAttr(wrapper, "submit-button");
+    expect(submitButton.text()).toBe("🚀");
   });
 });
