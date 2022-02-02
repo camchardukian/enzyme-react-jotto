@@ -2,10 +2,23 @@ import React from "react";
 import { mount } from "enzyme";
 import App from "./App";
 import { findByTestAttr } from "../test/testUtils";
+import successContext from "./contexts/successContext";
+import guessedWordsContext from "./contexts/guessedWordsContext";
 
-const setup = (state = {}) => {
-  // @TODO: apply state
-  const wrapper = mount(<App />);
+import Congrats from "./Congrats";
+import Input from "./Input";
+import GuessedWords from "./GuessedWords";
+
+const setup = ({ secretWord, guessedWords }) => {
+  const wrapper = mount(
+    <guessedWordsContext.GuessedWordsProvider>
+      <successContext.SuccessProvider>
+        <Congrats />
+        <Input secretWord={secretWord} />
+        <GuessedWords />
+      </successContext.SuccessProvider>
+    </guessedWordsContext.GuessedWordsProvider>
+  );
 
   // add value to input box
   const inputBox = findByTestAttr(wrapper, "input-box");
@@ -14,6 +27,12 @@ const setup = (state = {}) => {
   // simulate click on submit button
   const submitButton = findByTestAttr(wrapper, "submit-button");
   submitButton.simulate("click", { preventDefault() {} });
+
+  guessedWords.map((guess) => {
+    const mockEvent = { target: { value: guess.guessedWord } };
+    inputBox.simulate("change", mockEvent);
+    submitButton.simulate("click", { preventDefault() {} });
+  });
 
   return wrapper;
 };
