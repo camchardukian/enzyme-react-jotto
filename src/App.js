@@ -24,9 +24,6 @@ function App() {
     secretWord: null,
     language: "en",
   });
-  // @TODO -- Get props from state after implementing Context
-  const success = false;
-  const guessedWords = [];
 
   const setSecretWord = (secretWord) => {
     dispatch({ type: "setSecretWord", payload: secretWord });
@@ -53,6 +50,7 @@ function App() {
   return (
     <div data-test="component-app" className="container">
       <h1>Jotto</h1>
+      <p>the secret word is {state.secretWord}</p>
       <languageContext.Provider value={state.language}>
         <LanguagePicker setLanguage={setLanguage} />
         <guessedWordsContext.GuessedWordsProvider>
