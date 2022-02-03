@@ -3,11 +3,17 @@ import { mount } from "enzyme";
 import { findByTestAttr, checkProps } from "../test/testUtils";
 import Input from "./Input";
 import languageContext from "./contexts/languageContext";
+import successContext from "./contexts/successContext";
+import guessedWordsContext from "./contexts/guessedWordsContext";
 
 const setup = ({ language = "en", success = false, secretWord = "hello" }) => {
   return mount(
     <languageContext.Provider value={language}>
-      <Input success={success} secretWord={secretWord} />
+      <successContext.SuccessProvider value={[success, jest.fn()]}>
+        <guessedWordsContext.GuessedWordsProvider>
+          <Input secretWord={secretWord} />
+        </guessedWordsContext.GuessedWordsProvider>
+      </successContext.SuccessProvider>
     </languageContext.Provider>
   );
 };

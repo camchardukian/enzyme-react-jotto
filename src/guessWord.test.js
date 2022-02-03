@@ -37,7 +37,7 @@ const setup = ({ secretWord, guessedWords }) => {
   return wrapper;
 };
 
-describe.skip("no words guessed", () => {
+describe("no words guessed", () => {
   let wrapper;
   beforeEach(() => {
     wrapper = setup({
@@ -48,11 +48,11 @@ describe.skip("no words guessed", () => {
   });
   test("creates GuessedWords table with one row", () => {
     const guessedWordRows = findByTestAttr(wrapper, "guessed-word");
-    expect(guessedWordRows).toHaveLength(0);
+    expect(guessedWordRows).toHaveLength(1);
   });
 });
 
-describe.skip("some words guessed", () => {
+describe("some words guessed", () => {
   let wrapper;
   beforeEach(() => {
     wrapper = setup({
@@ -63,15 +63,11 @@ describe.skip("some words guessed", () => {
   });
   test("GuessedWords table should have additional rows after each guess", () => {
     const guessedWordRows = findByTestAttr(wrapper, "guessed-word");
-    expect(guessedWordRows).toHaveLength(1);
-    const inputBox = findByTestAttr(wrapper, "input-box");
-    inputBox.simulate("change", { target: { value: "party" } });
-    const guessedWordRows2 = findByTestAttr(wrapper, "guessed-word");
-    expect(guessedWordRows2).toHaveLength(2);
+    expect(guessedWordRows).toHaveLength(2);
   });
 });
 
-describe.skip("guess secret word", () => {
+describe("guess secret word", () => {
   let wrapper;
   beforeEach(() => {
     wrapper = setup({
@@ -81,7 +77,7 @@ describe.skip("guess secret word", () => {
     });
     // initial number of rows based on state is correct
     const guessedWordRows = findByTestAttr(wrapper, "guessed-word");
-    expect(guessedWordRows).toHaveLength(1);
+    expect(guessedWordRows).toHaveLength(2);
 
     // adds value to input box
     const inputBox = findByTestAttr(wrapper, "input-box");
@@ -94,7 +90,7 @@ describe.skip("guess secret word", () => {
 
   test("adds additional row to guessedWords table after guess", () => {
     const guessedWordRows = findByTestAttr(wrapper, "guessed-word");
-    expect(guessedWordRows).toHaveLength(2);
+    expect(guessedWordRows).toHaveLength(3);
   });
 
   test("displays congrats component", () => {
